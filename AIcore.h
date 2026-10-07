@@ -1,13 +1,66 @@
-#include<iostream>
-#include<vector>
+#ifndef AI_CORE_H
 #define AI_CORE_H
-#endif AI_CORE_H
 
-struct Mini_AI
+#include <iostream>
+#include <vector>
+#include <string>
+
+class Mini_AI
 {
+public: 
+    //Initialize the Variables
+    Mini_AI()
+    {
+        //AI state
+        is_Trained = false; // Is the AI trained?
+        last_Confidence = 0.0; // Confidence score from last reply
+        threshold  = 0.0; // Minimum Confidence before fallback
+        fallBack = "404 nothing to see here!"; // Default reply if confidence too low
+
+        //Stats & metaDeta
+        numExamples = 0; // count of training examples
+        numResponses = 0; // Count of responses Stored
+        sizeOfVocab = 0; // Basically Unique Words
+
+        // Config & Debug
+        verbose = false; //Toggle detail Logging
+        seed = 0; // Random seed for reproducability
+        LastError = "404 nothing to see here!"; // Log the last error
+    }
+
+    //training
+    void trainLAlgebra(int epohs, double lr);
+
+    //file system
+    void SAVETOTXT(const std::string& filename, int AIstate); //AI state will be 0 or 1. 0 for off and 1 for on
+    void LOADFROMTXT(const std::string& filename, int AIstate); //change the AI state.
+
+    //LifeCycle
+    void ai_create();
+    void ai_destroy();
+
+    //Data Management
+    void ai_reply(const std::string& input);
+    void ai_last_Confidence();
+    void ai_accuracy();
+
+    //Configuration
+    void ai_set_threshold(double threshold);
+    void ai_set_fallBack(const std::string& fallBack);
+    void ai_set_verbose(bool verbose);
+    void ai_set_seed(int seed);
+
+    //Statistics
+    void ai_num_examples();
+    void ai_num_responses();
+    void ai_vocab_size();
+    void ai_is_trained();
+    void ai_last_error();
+
+private:
     //storing I/O
     std::vector<std::string> inputs;
-    std::vector<std::string> output;
+    std::vector<std::string> outputs;
 
     //AI state
     bool is_Trained; // Is the AI trained?
@@ -25,54 +78,6 @@ struct Mini_AI
     int seed; // Random seed for reproducability
     std::string LastError; // Log the last error
 };
-class Mini_AI_Behaviour
-{
-    public: 
 
-    //Initialize the Variables
-    Mini_AI()
-    {
-        Mini_AI MA
-        MA.is_Trained = false;
-        MA.last_Confidence = 0.0;
-        MA.threshold  = 0.0;
-        MA.fallBack = "404 nothing to see here!";
-        MA.numExamples = 0;
-        MA.numResponses = 0;
-        MA.sizeOfVocab = 0;
-        MA.verbose = false;
-        MA.seed = 0;
-        MA.LastError = "404 nothing to see here!";
-    }
-
-    //training
-        void trainLAlgebra(int epohs, double lr);
-
-    //file system
-        void SAVETOTXT(std::string& filename, int AIstate); //AI state will be 0 or 1. 0 for off and 1 for on
-        void LOADFROMTXT(std::string& filename, int AIstate); //change the AI state.
-
-    //LifeCycle
-        void ai_create();
-        void ai_destroy();
-
-    //Data Management
-        void ai_reply(const std::string& input);
-        void ai_last_Confidence();
-        void ai_accuracy();
-
-   //Configuration
-       void ai_set_threshold(double threshold);
-       void ai_set_fallBack(const std::string& fallBack);
-       void ai_set_verbose(bool verbose);
-       void ai_set_seed(int seed);
-
-   //Statistics
-       void ai_num_examples();
-       void ai_num_responses();
-       void ai_vocab_size();
-       void ai_is_trained();
-       void ai_last_error();
-};
-
-
+#endif AI_CORE_H
+        
