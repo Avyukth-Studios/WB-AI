@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 // Idk math for this. asked AI how to do these. Gave me the formulae;
-double Mini_AI::forward(const std::vector<double>& input) 
+double Mini_AI::math_forward(const std::vector<double>& input) 
 {
   int TempSum = 0;
   for(auto& i : inputs)
@@ -15,14 +15,14 @@ double Mini_AI::forward(const std::vector<double>& input)
   return prediction;
 }
 
-double Mini_AI::computeLoss(double prediction, double expected)
+double Mini_AI::math_computeLoss(double prediction, double expected)
 {
   diffrence = prediction - expected;
   double loss = diff * diff;
   return loss;
 }
 
-std::vector<double> Mini_AI::computeGradient(const std::vector<double>& input, double prediction, double expected)
+std::vector<double> Mini_AI::math_computeGradient(const std::vector<double>& input, double prediction, double expected)
 {
     double whatever = 2 * (prediction - expected);
     double shitffff = prediction * (1-prediction);
@@ -32,7 +32,7 @@ std::vector<double> Mini_AI::computeGradient(const std::vector<double>& input, d
     return gradientBias;
 }
 
-void Mini_AI::updateWeights(const std::vector<double>& gradient, double lr)
+void Mini_AI::math_updateWeights(const std::vector<double>& gradient, double lr)
 {
   weight = weight - (lr * gradient);
   bias = biasGradient - (lr * bias)
