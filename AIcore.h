@@ -57,6 +57,13 @@ public:
     void ai_is_trained();
     void ai_last_error();
 
+    //Helper Functions
+    double forward(const std::vector<double>& input);
+    double computeLoss(double prediction, double expected);
+    std::vector<double> computeGradient(const std::vector<double>& input, double prediction, double expected);
+    void updateWeights(const std::vector<double>& gradient, double lr);
+
+
 private:
     //storing I/O
     std::vector<std::string> inputs;
