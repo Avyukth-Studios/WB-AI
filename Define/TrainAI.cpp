@@ -8,6 +8,7 @@ void Mini_AI::trainLAgebra(int epohs, int lr)
         if(i.isEmpty) //checks if input is empyty
         {
             std::string& LastError = "Error: 1910, Input not entered"; //if it is. Log it;
+            isTrained = false;
             std::cerr << "404";
         }  
 
