@@ -29,7 +29,7 @@ public:
     }
 
     //training
-    void ai_trainLAlgebra(int epohs, double lr);
+    void ai_train(int epohs, double lr);
 
     //file system
     void File_SAVETOTXT(const std::string& filename, int AIstate); //AI state will be 0 or 1. 0 for off and 1 for on
