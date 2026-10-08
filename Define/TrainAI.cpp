@@ -1,7 +1,7 @@
 #include "AIcore.h"
 #include <iostream>
 
-void Mini_AI::trainLAgebra(int epohs, int lr)
+void Mini_AI::ai_train(int epohs, int lr)
 {
     for(auto& i : inputs) //gets the inputs vector without copying;
     {
