@@ -15,7 +15,7 @@ public:
         is_Trained = false; // Is the AI trained?
         last_Confidence = 0.0; // Confidence score from last reply
         threshold  = 0.0; // Minimum Confidence before fallback
-        fallBack = "404 nothing to see here!"; // Default reply if confidence too low
+        fallBack = "NULLSTRING"; // Default reply if confidence too low
 
         //Stats & metaDeta
         numExamples = 0; // count of training examples
@@ -29,15 +29,15 @@ public:
     }
 
     //training
-    void trainLAlgebra(int epohs, double lr);
+    void ai_trainLAlgebra(int epohs, double lr);
 
     //file system
-    void SAVETOTXT(const std::string& filename, int AIstate); //AI state will be 0 or 1. 0 for off and 1 for on
-    void LOADFROMTXT(const std::string& filename, int AIstate); //change the AI state.
+    void File_SAVETOTXT(const std::string& filename, int AIstate); //AI state will be 0 or 1. 0 for off and 1 for on
+    void File_LOADFROMTXT(const std::string& filename, int AIstate); //change the AI state.
 
     //LifeCycle
-    void ai_create();
-    void ai_destroy();
+    void Instance_ai_create();
+    void Instance_ai_destroy();
 
     //Data Management
     void ai_reply(const std::vector<double>& input);
@@ -58,10 +58,10 @@ public:
     void ai_last_error();
 
     //Helper Functions
-    double forward(const std::vector<double>& input);
-    double computeLoss(double prediction, double expected);
-    std::vector<double> computeGradient(const std::vector<double>& input, double prediction, double expected);
-    void updateWeights(const std::vector<double>& gradient, double lr);
+    double math_forward(const std::vector<double>& input);
+    double math_computeLoss(double prediction, double expected);
+    std::vector<double> math_computeGradient(const std::vector<double>& input, double prediction, double expected);
+    void math_updateWeights(const std::vector<double>& gradient, double lr);
 
 
 private:
