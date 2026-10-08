@@ -40,9 +40,9 @@ public:
     void ai_destroy();
 
     //Data Management
-    void ai_reply(const std::string& input);
+    void ai_reply(const std::vector<double>& input);
     void ai_last_Confidence();
-    void ai_accuracy();
+    void ai_accuracy(const std::vector<double>& expectedOutputs);
 
     //Configuration
     void ai_set_threshold(double threshold);
@@ -61,6 +61,14 @@ private:
     //storing I/O
     std::vector<std::string> inputs;
     std::vector<std::string> outputs;
+    std::vector<double> weights; // Adjustable parameters for input feature
+    std::vector<std::vector<double>> numericInputs; //Each training example as a vector of numbers
+    std::vector<double> numericOutputs; // Expected Numeric Results
+    double bias; // Predctions
+
+    //AI training
+    double learningRate; // Updates
+    int epochsRun; // How many Epochs Completed?
 
     //AI state
     bool is_Trained; // Is the AI trained?
@@ -77,6 +85,7 @@ private:
     bool verbose; //Toggle detail Logging
     int seed; // Random seed for reproducability
     std::string LastError; // Log the last error
+    double lastErrorValue; // most recent loss of value
 };
 
 #endif AI_CORE_H
