@@ -45,7 +45,7 @@ public:
     void ai_accuracy(const std::vector<double>& expectedOutputs);
 
     //Configuration
-    void ai_set_threshold(double threshold);
+    void ai_set_threshold(double& threshold);
     void ai_set_fallBack(const std::string& fallBack);
     void ai_set_verbose(bool verbose);
     void ai_set_seed(int seed);
