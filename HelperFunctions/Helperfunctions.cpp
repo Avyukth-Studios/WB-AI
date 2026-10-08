@@ -22,7 +22,7 @@ double Mini_AI::computeLoss(double prediction, double expected)
   return loss;
 }
 
-std::vector<double> computeGradient(const std::vector<double>& input, double prediction, double expected)
+std::vector<double> Mini_AI::computeGradient(const std::vector<double>& input, double prediction, double expected)
 {
     double whatever = 2 * (prediction - expected);
     double shitffff = prediction * (1-prediction);
@@ -32,7 +32,7 @@ std::vector<double> computeGradient(const std::vector<double>& input, double pre
     return gradientBias;
 }
 
-void updateWeights(const std::vector<double>& gradient, double lr)
+void Mini_AI::updateWeights(const std::vector<double>& gradient, double lr)
 {
   weight = weight - (lr * gradient);
   bias = biasGradient - (lr * bias)
