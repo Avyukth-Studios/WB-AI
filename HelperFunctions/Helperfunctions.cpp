@@ -34,8 +34,8 @@ std::vector<double> computeGradient(const std::vector<double>& input, double pre
 
 void updateWeights(const std::vector<double>& gradient, double lr)
 {
-  double weight = weight - (lr * gradient);
-  double bias = bias - (lr * bias)
+  weight = weight - (lr * gradient);
+  bias = biasGradient - (lr * bias)
 }
 
   
