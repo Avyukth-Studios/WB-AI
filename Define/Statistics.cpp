@@ -1,17 +1,5 @@
-#include "WB.h"
-#include <iostream>
-#include <vector>
+#include "WB.h"  
 
-
-bool Mini_AI::ai_is_trained()
-{
-  if(is_trained == true)
-  {
-    return true;
-  }
-  else
-  {
-    return false;
-  }
+bool Mini_AI::ai_is_trained() {
+    return is_trained;
 }
-
