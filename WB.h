@@ -43,6 +43,8 @@ public:
     void ai_reply(const std::vector<double>& input);
     void ai_last_Confidence();
     void ai_accuracy(const std::vector<double>& expectedOutputs);
+    void ai_reply_string(const std::string& input);
+    void ai_reply_numeric(const int& input);
 
     //Configuration
     void ai_set_threshold(double& threshold);
