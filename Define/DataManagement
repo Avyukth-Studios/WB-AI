@@ -1,1 +1,6 @@
+#include <iostream>
+#include "WB.h"
 
+void ai_reply_string(const std::string& input)
+{
+    
