@@ -28,10 +28,10 @@ public:
         LastError = "404 nothing to see here!"; // Log the last error
     }
 
-    //training
+    //training (Pending)
     void ai_train(int epohs, double lr);
 
-    //file system
+    //file systemV (Pending)
     void File_SAVETOTXT(const std::string& filename, int AIstate); //AI state will be 0 or 1. 0 for off and 1 for on
     void File_LOADFROMTXT(const std::string& filename, int AIstate); //change the AI state.
 
@@ -39,29 +39,29 @@ public:
     void Instance_ai_create();
     void Instance_ai_destroy();
 
-    //Data Management
+    //Data Management (PENDING 2 functions)
     void ai_reply(const std::vector<double>& input);
     void ai_last_Confidence();
     void ai_accuracy(const std::vector<double>& expectedOutputs);
-    void ai_reply_string(const std::string& input);
-    void ai_reply_numeric(const int& input);
+    void ai_reply_string(const std::string& input); //pending
+    void ai_reply_numeric(const int& input); //pending
 
-    //Configuration
+    //Configuration (DONE)
     void ai_set_threshold(double& threshold);
     void ai_set_fallBack(const std::string& fallBack);
     void ai_set_verbose(bool verbose);
     void ai_set_seed(int seed);
 
-    //Statistics
+    //Statistics (DONE)
     void ai_num_examples();
     void ai_num_responses();
     void ai_vocab_size();
     void ai_is_trained();
     void ai_last_error();
 
-    //Helper Functions
+    //Helper Functions (DONE)
     double math_forward(const std::vector<double>& input);
-    double math_computeLoss(double prediction, double expected);
+    double math_computeLoss(double prediction, double expected);        
     std::vector<double> math_computeGradient(const std::vector<double>& input, double prediction, double expected);
     void math_updateWeights(const std::vector<double>& gradient, double lr);
 
