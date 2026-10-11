@@ -41,28 +41,19 @@ void Mini_AI::fileLoadKnowledge(const std::string& filename, std::map<std::strin
 }
 
 
-void Mini_AI::fileSaveKnowledge(const std::string& filename, std::map<std::string, WordEntry>& dictionary) {
-    std::ifstream inFile(filename);
-    if (!inFile) {
-        std::cerr << "Error opening file for reading: " << filename << std::endl;
+void Mini_AI::fileSaveKnowledge(const std::string& filename, const std::map<std::string, WordEntry>& dictionary) {
+    std::ofstream outFile(filename, std::ios::out | std::ios::trunc);
+    if (!outFile) {
+        std::cerr << "Error opening file for writing: " << filename << std::endl;
         return;
     }
-    std::string line;
-    while (std::getline(inFile, line)) {
-        size_t delimiterPos = line.find("|");
-        if (delimiterPos != std::string::npos) {
-            std::string word = line.substr(0, delimiterPos);
-            std::string rest = line.substr(delimiterPos + 1);
 
-            size_t first = rest.find("||");
-            size_t second = rest.find("||", first + 2);
-
-            std::string definition = rest.substr(0, first);
-            std::string pos = rest.substr(first + 2, second - (first + 2));
-            std::string sentence = rest.substr(second + 2);
-
-            dictionary[word] = {definition, pos, sentence};
-        }
+    for (const auto& [word, entry] : dictionary) {
+        outFile << word << "="
+                << entry.definition << "||"
+                << entry.partOfSpeech << "||"
+                << entry.sentence << "\n";
     }
-    inFile.close();
+
+    outFile.close();
 }

@@ -1,22 +1,22 @@
-#include "WB.h
+#include "WB.h"
 #include <iostream>
 #include <vector>
 #include <string>
 #include <map>
+#include <fstream>
+#include <random>
+
 void Mini_AI::aiTrain(int epochs, double lr) {
     learningRate = lr;
     epochsRun = 0;
 
-
     dictionary.clear();
     fileLoadKnowledge("ExampleWords.txt", dictionary);
-
 
     numericInputs.clear();
     numericOutputs.clear();
     for (auto& [word, meaning] : dictionary) {
         std::vector<double> features;
-
 
         features.push_back(static_cast<double>(word.length()));
         double sumAscii = 0; int vowels = 0;
@@ -29,7 +29,7 @@ void Mini_AI::aiTrain(int epochs, double lr) {
 
         numericInputs.push_back(features);
 
-        numericOutputs.push_back(!meaning.empty() ? 1.0 : 0.0);
+        numericOutputs.push_back(!meaning.definition.empty() ? 1.0 : 0.0);
     }
 
     numExamples = numericInputs.size();

@@ -19,7 +19,12 @@ int Mini_AI::vocabSize()
     return sizeOfVocab;
 }
 
+double Mini_AI::aiLastConfidence()
+{
+    return last_Confidence;
+}
+
 int Mini_AI::lastError()
 {
-    return lastErrorValue;
+    return static_cast<int>(lastErrorValue);
 }

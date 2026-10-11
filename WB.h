@@ -6,6 +6,12 @@
 #include <string>
 #include <map>
 
+struct WordEntry {
+    std::string definition;
+    std::string partOfSpeech;
+    std::string sentence;
+};
+
 class Mini_AI
 {
 public: 
@@ -36,27 +42,27 @@ public:
     void aiTrain(int epohs, double lr);
 
     //file systemV (DONE)
-    void fileSaveKnowledge(const std::string& filename, const std::map<std::string, std::string>& dictionary); //Save the knowledge
-    void fileLoadKnowledge(const std::string& filename, std::map<std::string, std::string>& dictionary); //Load Knowledge
+    void fileSaveKnowledge(const std::string& filename, const std::map<std::string, WordEntry>& dictionary); //Save the knowledge
+    void fileLoadKnowledge(const std::string& filename, std::map<std::string, WordEntry>& dictionary); //Load Knowledge
 
 
     //Data Management (PENDING 2 functions)
     void aiReply(const std::vector<double>& input);
-    void aiLastConfidence();
+    double aiLastConfidence();
     void aiAccuracy(const std::vector<double>& expectedOutputs);
     void aiReplyString(const std::string& input); //pending
     void aiReplyNumeric(const int& input); //pending
 
     //Configuration (DONE)
-    void setThreshold(double& threshold);
+    void setThreshold(double threshold);
     void setFallBack(const std::string& fallBack);
     void setVerbose(bool verbose);
     void setSeed(int seed);
 
     //Statistics (DONE)
-    void numExamples();
-    void numResponses();
-    void vocabSize();
+    int numExamples();
+    int numResponses();
+    int vocabSize();
     bool isTrained();
     int lastError();
 
@@ -75,14 +81,14 @@ private:
     std::vector<std::vector<double>> numericInputs; // Each training example as a vector of numbers
     std::vector<double> numericOutputs; // Expected Numeric Results
     double bias; // Predctions
-    std::map<std::string, std::string> dictionary; // Storing vocabulary
+    std::map<std::string, WordEntry> dictionary; // Storing vocabulary
 
     //AI training
     double learningRate; // Updates
     int epochsRun; // How many Epochs Completed?
 
     //AI state
-    bool is_Trained; // Is the AI trained?
+    bool is_trained; // Is the AI trained?
     double last_Confidence; // Confidence score from last reply
     double threshold; // Minimum Confidence before fallback
     std::string fallBack; // Default reply if confidence too low

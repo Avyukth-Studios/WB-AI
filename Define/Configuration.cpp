@@ -1,6 +1,6 @@
 #include "WB.h"
 //Setters
-void Mini_AI::setThreshold(double& threshold)
+void Mini_AI::setThreshold(double threshold)
 {
     this->threshold = threshold;
 }

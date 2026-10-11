@@ -1,7 +1,7 @@
 #ifndef AI_CORE_C_H
 #define AI_CORE_C_H
 
-#include "AI_CORE_H"
+#include "WB.h"
 
 #ifdef __cplusplus
 extern "C" {
