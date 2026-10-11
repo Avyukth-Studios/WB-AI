@@ -1,3 +1,8 @@
+#include "WB.h
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
 void Mini_AI::aiTrain(int epochs, double lr) {
     learningRate = lr;
     epochsRun = 0;
