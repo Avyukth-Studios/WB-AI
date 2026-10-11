@@ -66,6 +66,7 @@ void Mini_AI::aiTrain(int epochs, double lr) {
 
     is_trained = true;
     std::ofstream out("trained_model.txt");
+    
     for (auto& w : weights) out << w << " ";
     out << "\n" << bias << std::endl;
     out.close();
