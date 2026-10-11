@@ -41,7 +41,7 @@ void Mini_AI::fileLoadKnowledge(const std::string& filename, std::map<std::strin
 }
 
 
-void Mini_AI::FileLoadKnowledge(const std::string& filename, std::map<std::string, WordEntry>& dictionary) {
+void Mini_AI::fileSaveKnowledge(const std::string& filename, std::map<std::string, WordEntry>& dictionary) {
     std::ifstream inFile(filename);
     if (!inFile) {
         std::cerr << "Error opening file for reading: " << filename << std::endl;
