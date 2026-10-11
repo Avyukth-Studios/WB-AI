@@ -27,6 +27,9 @@ public:
         verbose = false; //Toggle detail Logging
         seed = 0; // Random seed for reproducability
         LastError = "404 nothing to see here!"; // Log the last error
+
+        std::cout << "WorkBench AI library." << std::endl;
+        std::cout << "© 2025 Avyukth Studios. All Rights Reserved Unpublished";
     }
       
     //training (Pending)
