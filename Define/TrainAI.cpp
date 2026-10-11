@@ -58,6 +58,7 @@ void Mini_AI::aiTrain(int epochs, double lr) {
         if (verbose) {
             std::cout << "Epoch " << epoch+1 << "/" << epochs 
                       << " Loss: " << totalLoss / numericInputs.size() << std::endl;
+            std::cout << "© 2025 Avyukth Studios. All rights reserved unpublished."
         }
     }
 
@@ -107,7 +108,8 @@ void Mini_AI::aiAccuracy(const std::vector<double>& expectedOutputs) {
             correct++;
         }
     }
-    std::cout << "Accuracy: " << (correct / expectedOutputs.size()) * 100.0 << "%" << std::endl;
+    std::cout << "(© 2025 Avyukth Studios. All rights reserved unpublished)Accuracy: " << (correct / expectedOutputs.size()) * 100.0 << "%" << std::endl;
+    
 }
 
 void Mini_AI::setThreshold(double& t) { threshold = t; }
