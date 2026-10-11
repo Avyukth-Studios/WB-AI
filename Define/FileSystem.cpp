@@ -13,7 +13,7 @@ struct WordEntry {
 void Mini_AI::fileLoadKnowledge(const std::string& filename, std::map<std::string, WordEntry>& dictionary) {
     std::ifstream inFile(filename);
     if (!inFile) {
-        std::cerr << "Error opening file for reading: " << filename << std::endl;
+        std::cerr << "(© 2025 Avyukth Studios. All rights reserved unpublished)Error opening file for reading: " << filename << std::endl;
         return;
     }
     std::string line;
@@ -37,7 +37,7 @@ void Mini_AI::fileLoadKnowledge(const std::string& filename, std::map<std::strin
         ++count; // increment
     }
     inFile.close();
-    std::cout << "Loaded " << count << " entries from " << filename << std::endl;
+    std::cout << "(© 2025 Avyukth Studios. All rights reserved unpublished)Loaded " << count << " entries from " << filename << std::endl;
 }
 
 
