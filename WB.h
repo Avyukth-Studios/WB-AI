@@ -14,95 +14,77 @@ struct WordEntry {
 
 class Mini_AI
 {
-public: 
-    //Initialize the Variables
-    Mini_AI()
-    {
-        //AI state
-        is_trained = false; // Is the AI trained?
-        last_Confidence = 0.0; // Confidence score from last reply
-        threshold  = 0.0; // Minimum Confidence before fallback
-        fallBack = "NULLSTRING"; // Default reply if confidence too low
+public:
+    Mini_AI();
 
-        //Stats & metaDeta
-        numExamples = 0; // count of training examples
-        numResponses = 0; // Count of responses Stored
-        sizeOfVocab = 0; // Basically Unique Words
+    // Training
+    void aiTrain(int epochs, double lr);
 
-        // Config & Debug
-        verbose = false; //Toggle detail Logging
-        seed = 0; // Random seed for reproducability
-        LastError = "404 nothing to see here!"; // Log the last error
+    // File system
+    void fileSaveKnowledge(const std::string& filename, const std::map<std::string, WordEntry>& dictionary);
+    void fileLoadKnowledge(const std::string& filename, std::map<std::string, WordEntry>& dictionary);
 
-        std::cout << "WorkBench AI library." << std::endl;
-        std::cout << "© 2025 Avyukth Studios. All Rights Reserved Unpublished";
-    }
-      
-    //training (Pending)
-    void aiTrain(int epohs, double lr);
-
-    //file systemV (DONE)
-    void fileSaveKnowledge(const std::string& filename, const std::map<std::string, WordEntry>& dictionary); //Save the knowledge
-    void fileLoadKnowledge(const std::string& filename, std::map<std::string, WordEntry>& dictionary); //Load Knowledge
-
-
-    //Data Management (PENDING 2 functions)
+    // Data management
     void aiReply(const std::vector<double>& input);
+    void aiReply(const std::string& input);
+    void aiReply(const int& input);
+
+    // Backwards-compatible aliases for the old naming scheme.
+    void aiReplyString(const std::string& input) { aiReply(input); }
+    void aiReplyNumeric(const int& input) { aiReply(input); }
+
     double aiLastConfidence();
     void aiAccuracy(const std::vector<double>& expectedOutputs);
-    void aiReplyString(const std::string& input); //pending
-    void aiReplyNumeric(const int& input); //pending
 
-    //Configuration (DONE)
+    // Configuration
     void setThreshold(double threshold);
     void setFallBack(const std::string& fallBack);
     void setVerbose(bool verbose);
     void setSeed(int seed);
 
-    //Statistics (DONE)
+    // Statistics
     int numExamples();
     int numResponses();
     int vocabSize();
     bool isTrained();
-    int lastError();
+    std::string lastError();
 
-    //Helper Functions (DONE)
+    // Helper functions
     double math_forward(const std::vector<double>& input);
-    double math_computeLoss(double prediction, double expected);        
+    double math_computeLoss(double prediction, double expected);
     std::vector<double> math_computeGradient(const std::vector<double>& input, double prediction, double expected);
     void math_updateWeights(const std::vector<double>& gradient, double lr);
 
-
 private:
-    //storing I/O
+    // Storing I/O
     std::vector<std::string> inputs;
     std::vector<std::string> outputs;
-    std::vector<double> weights; // Adjustable parameters for input feature
-    std::vector<std::vector<double>> numericInputs; // Each training example as a vector of numbers
-    std::vector<double> numericOutputs; // Expected Numeric Results
-    double bias; // Predctions
-    std::map<std::string, WordEntry> dictionary; // Storing vocabulary
+    std::vector<double> weights;
+    std::vector<std::vector<double>> numericInputs;
+    std::vector<double> numericOutputs;
+    double bias;
+    std::map<std::string, WordEntry> dictionary;
 
-    //AI training
-    double learningRate; // Updates
-    int epochsRun; // How many Epochs Completed?
+    // AI training
+    double learningRate;
+    int epochsRun;
 
-    //AI state
-    bool is_trained; // Is the AI trained?
-    double last_Confidence; // Confidence score from last reply
-    double threshold; // Minimum Confidence before fallback
-    std::string fallBack; // Default reply if confidence too low
+    // AI state
+    bool is_trained;
+    double last_Confidence;
+    double threshold;
+    std::string fallBack;
 
-    //Stats & metaDeta
-    int numExamples; // count of training examples
-    int numResponses; // Count of responses Stored
-    int sizeOfVocab; // Basically Unique Words
+    // Stats & metadata
+    int numExamples;
+    int numResponses;
+    int sizeOfVocab;
 
-    // Config & Debug
-    bool verbose; //Toggle detail Logging
-    int seed; // Random seed for reproducability
-    std::string LastError; // Log the last error
-    double lastErrorValue; // most recent loss of value
+    // Config & debug
+    bool verbose;
+    int seed;
+    std::string LastError;
+    double lastErrorValue;
 };
 
 #endif
