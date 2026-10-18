@@ -1,8 +1,10 @@
 # Work bench AI Library (Discontinued Permanently)
 
-Because of AI_Reply function and also lost complete intrest...
+Because of AI_Reply function and also lost complete intrest... and it is still discontinued since 1 week before
 
 This library is therefore discontinued.
+
+
 sumdgy does most of the work. ATT_Cpp helps with code i dont know.
 
 Thank you for understanding.
