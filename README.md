@@ -11,23 +11,19 @@ cmake -S . -B build
 cmake --build build
 ```
 
-## C++ usage
+## Interactive C++ example
 
-```cpp
-#include "WB.h"
-#include <iostream>
+The demo reads questions from the terminal instead of using a hardcoded prompt. Add a `knowledge.txt` file in the working directory to supply your own knowledge; if it is absent, the demo loads a small built-in sample dataset.
 
-int main() {
-    Mini_AI ai;
-    ai.addKnowledge("cpp=C++ is a general-purpose programming language.");
-    ai.train_ai(20, 0.01);
-    std::cout << ai.aiReply("What is cpp?") << '\n';
-}
+```bash
+./build/wbai_demo
 ```
+
+Type `/quit` to exit.
 
 ## Python FFI usage
 
-Build the shared library, then use the thin Python client:
+Build the shared library, then use the thin Python client. The question is read from the user at runtime:
 
 ```python
 from python.wb_ai import WB_AI
@@ -35,7 +31,8 @@ from python.wb_ai import WB_AI
 with WB_AI("build/libwbai.so") as ai:
     ai.add_knowledge("cpp=C++ is a general-purpose programming language.")
     ai.train_ai(20, 0.01)
-    print(ai.reply("What is cpp?"))
+    question = input("Ask WB-AI: ")
+    print(ai.reply(question))
 ```
 
 `crawlWebsite(url)` fetches public HTTP or HTTPS pages with libcurl. Website access depends on network availability and the website's terms of use. Extracted content is kept as local retrieval knowledge; this small library is not a large language model and does not provide ChatGPT-like generative responses.
