@@ -1,15 +1,17 @@
 # WB-AI
 
-WB-AI is a small C++ knowledge library with a C-compatible Python FFI.
+WB-AI is a C++17 knowledge retrieval library. The C++ library handles knowledge storage, website extraction, training, and responses. The optional Python module is only a `ctypes` FFI client that calls the compiled C++ library; it does not implement AI behavior.
 
 ## Build
+
+CMake and libcurl are required.
 
 ```bash
 cmake -S . -B build
 cmake --build build
 ```
 
-## C++ example
+## C++ usage
 
 ```cpp
 #include "WB.h"
@@ -23,19 +25,17 @@ int main() {
 }
 ```
 
-## Python example
+## Python FFI usage
+
+Build the shared library, then use the thin Python client:
 
 ```python
-import ctypes
+from python.wb_ai import WB_AI
 
-library = ctypes.CDLL("./build/libwbai.so")
-library.ai_create.restype = ctypes.c_void_p
-library.ai_reply.restype = ctypes.c_char_p
-library.ai_reply.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
-
-ai = library.ai_create()
-library.ai_add_knowledge(ai, b"cpp=C++ is a general-purpose programming language.")
-library.ai_train(ai, 20, 0.01)
-print(library.ai_reply(ai, b"What is cpp?").decode())
-library.ai_destroy(ai)
+with WB_AI("build/libwbai.so") as ai:
+    ai.add_knowledge("cpp=C++ is a general-purpose programming language.")
+    ai.train_ai(20, 0.01)
+    print(ai.reply("What is cpp?"))
 ```
+
+`crawlWebsite(url)` fetches public HTTP or HTTPS pages with libcurl. Website access depends on network availability and the website's terms of use. Extracted content is kept as local retrieval knowledge; this small library is not a large language model and does not provide ChatGPT-like generative responses.

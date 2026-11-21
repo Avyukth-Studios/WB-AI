@@ -5,8 +5,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+find_package(CURL REQUIRED)
+
 add_library(wbai SHARED src/WB.cpp Wrapper/Wrapper.cpp)
- target_include_directories(wbai PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(wbai PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(wbai PRIVATE CURL::libcurl)
 
 add_executable(wbai_demo examples/demo.cpp src/WB.cpp)
 target_include_directories(wbai_demo PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(wbai_demo PRIVATE CURL::libcurl)

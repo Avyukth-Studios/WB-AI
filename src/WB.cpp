@@ -1,13 +1,14 @@
 #include "WB.h"
 
 #include <algorithm>
-#include <cmath>
 #include <cctype>
+#include <cmath>
 #include <fstream>
 #include <iostream>
 #include <random>
 #include <set>
 #include <sstream>
+#include <curl/curl.h>
 
 Mini_AI::Mini_AI()
     : bias(0.0), learningRate(0.01), epochsRun(0), is_trained(false),
@@ -30,6 +31,15 @@ static std::vector<std::string> words(const std::string& text) {
     std::string word;
     while (stream >> word) result.push_back(word);
     return result;
+}
+
+static size_t receiveResponse(char* data, size_t size, size_t count, void* context) {
+    const size_t bytes = size * count;
+    std::string* response = static_cast<std::string*>(context);
+    const size_t limit = 5 * 1024 * 1024;
+    if (bytes > limit - response->size()) return 0;
+    response->append(data, bytes);
+    return bytes;
 }
 
 std::vector<double> Mini_AI::features(const std::string& text) const {
@@ -101,35 +111,35 @@ bool Mini_AI::crawlWebsite(const std::string& url, const std::string& outputFile
         return false;
     }
 
-    std::string command;
-#ifdef _WIN32
-    command = "python -c \"import urllib.request; d=urllib.request.urlopen(";
-#else
-    command = "python3 -c \"import urllib.request; d=urllib.request.urlopen(";
-#endif
+    static const bool curlReady = curl_global_init(CURL_GLOBAL_DEFAULT) == CURLE_OK;
+    if (!curlReady) {
+        LastError = "Unable to initialize the HTTP client";
+        return false;
+    }
 
-    command += "'''" + url + "''').read().decode('utf-8','replace'); print(d)\"";
-
-#ifdef _WIN32
-    FILE* pipe = _popen(command.c_str(), "r");
-#else
-    FILE* pipe = popen(command.c_str(), "r");
-#endif
-    if (!pipe) {
-        LastError = "Unable to start web extractor";
+    CURL* handle = curl_easy_init();
+    if (!handle) {
+        LastError = "Unable to create the HTTP request";
         return false;
     }
 
     std::string html;
-    char buffer[4096];
-    while (fgets(buffer, sizeof(buffer), pipe)) html += buffer;
-#ifdef _WIN32
-    int status = _pclose(pipe);
-#else
-    int status = pclose(pipe);
-#endif
-    if (status != 0) {
-        LastError = "Website extraction failed";
+    curl_easy_setopt(handle, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, receiveResponse);
+    curl_easy_setopt(handle, CURLOPT_WRITEDATA, &html);
+    curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(handle, CURLOPT_MAXREDIRS, 5L);
+    curl_easy_setopt(handle, CURLOPT_CONNECTTIMEOUT, 10L);
+    curl_easy_setopt(handle, CURLOPT_TIMEOUT, 30L);
+    curl_easy_setopt(handle, CURLOPT_USERAGENT, "WB-AI/1.0");
+    curl_easy_setopt(handle, CURLOPT_FAILONERROR, 1L);
+    curl_easy_setopt(handle, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
+    curl_easy_setopt(handle, CURLOPT_REDIR_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
+
+    CURLcode result = curl_easy_perform(handle);
+    curl_easy_cleanup(handle);
+    if (result != CURLE_OK) {
+        LastError = std::string("Website extraction failed: ") + curl_easy_strerror(result);
         return false;
     }
 
@@ -137,19 +147,35 @@ bool Mini_AI::crawlWebsite(const std::string& url, const std::string& outputFile
     bool insideTag = false;
     for (char c : html) {
         if (c == '<') insideTag = true;
-        else if (c == '>') insideTag = false;
-        else if (!insideTag) text += c;
+        else if (c == '>') {
+            insideTag = false;
+            text += ' ';
+        } else if (!insideTag) {
+            text += c;
+        }
     }
     std::replace(text.begin(), text.end(), '\n', ' ');
+    if (text.empty()) {
+        LastError = "The website did not contain readable text";
+        return false;
+    }
 
     if (!outputFile.empty()) {
         std::ofstream out(outputFile);
-        if (out) out << text;
+        if (!out) {
+            LastError = "Unable to write extracted website text: " + outputFile;
+            return false;
+        }
+        out << text;
     }
     return addKnowledge(text);
 }
 
 void Mini_AI::train_ai(int epochs, double lr) {
+    if (epochs <= 0 || !std::isfinite(lr) || lr <= 0.0) {
+        LastError = "Training requires positive epochs and learning rate";
+        return;
+    }
     learningRate = lr;
     epochsRun = 0;
     numericInputs.clear();
@@ -173,7 +199,6 @@ void Mini_AI::train_ai(int epochs, double lr) {
     }
 
     numExamplesCount = static_cast<int>(numericInputs.size());
-
     for (int epoch = 0; epoch < epochs; ++epoch) {
         for (size_t i = 0; i < numericInputs.size(); ++i) {
             double prediction = 0.0;
@@ -192,9 +217,7 @@ void Mini_AI::train_ai(int epochs, double lr) {
     LastError.clear();
 }
 
-void Mini_AI::aiTrain(int epochs, double lr) {
-    train_ai(epochs, lr);
-}
+void Mini_AI::aiTrain(int epochs, double lr) { train_ai(epochs, lr); }
 
 std::string Mini_AI::aiReply(const std::string& input) {
     if (input.empty()) {
@@ -263,26 +286,18 @@ void Mini_AI::fileLoadKnowledge(const std::string& filename,
 
     std::string line;
     while (std::getline(file, line)) {
-        std::string key;
-        std::string rest;
         auto firstEqual = line.find('=');
         if (firstEqual == std::string::npos) continue;
-        key = line.substr(0, firstEqual);
-        rest = line.substr(firstEqual + 1);
-
-        std::string definition;
-        std::string partOfSpeech;
-        std::string sentence;
+        std::string key = line.substr(0, firstEqual);
+        std::string rest = line.substr(firstEqual + 1);
         auto firstSeparator = rest.find("||");
         auto secondSeparator = firstSeparator == std::string::npos ? std::string::npos : rest.find("||", firstSeparator + 2);
-        if (firstSeparator != std::string::npos && secondSeparator != std::string::npos) {
-            definition = rest.substr(0, firstSeparator);
-            partOfSpeech = rest.substr(firstSeparator + 2, secondSeparator - firstSeparator - 2);
-            sentence = rest.substr(secondSeparator + 2);
-        } else {
-            definition = rest;
-        }
-        knowledge[key] = {definition, partOfSpeech, sentence};
+        if (firstSeparator == std::string::npos || secondSeparator == std::string::npos)
+            knowledge[key] = {rest, "", ""};
+        else
+            knowledge[key] = {rest.substr(0, firstSeparator),
+                              rest.substr(firstSeparator + 2, secondSeparator - firstSeparator - 2),
+                              rest.substr(secondSeparator + 2)};
     }
 }
 
