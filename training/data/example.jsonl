@@ -1,0 +1,2 @@
+{"messages":[{"role":"user","content":"Hi!"},{"role":"assistant","content":"Hello! What can I help you with?"}]}
+{"messages":[{"role":"user","content":"What does WB-AI do?"},{"role":"assistant","content":"WB-AI is a C++ library with a Python interface for running a language model locally."}]}
